@@ -1,0 +1,18 @@
+databaseChangeLog:
+- changeSet:
+      id:  1
+      author:  Yannick Roffin
+      labels: init
+      context: init
+      comment: init
+      changes:
+       - createTable:
+            tableName:  project
+            columns:
+              - column:
+                  name:  name
+                  type:  varchar
+                  autoIncrement:  false
+                  constraints:
+                    primaryKey:  true
+                    nullable:  false
