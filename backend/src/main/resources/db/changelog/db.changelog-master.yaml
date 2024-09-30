@@ -16,3 +16,78 @@ databaseChangeLog:
                   constraints:
                     primaryKey:  true
                     nullable:  false
+- changeSet:
+      id:  2
+      author:  Yannick Roffin
+      labels: add-css-table
+      context: add-css-table
+      comment: add-css-table
+      changes:
+       - createTable:
+            tableName: style_sheet
+            columns:
+              - column:
+                  name:  name
+                  type:  varchar
+                  autoIncrement:  false
+                  constraints:
+                    primaryKey:  true
+                    nullable:  false
+              - column:
+                  name:  content
+                  type:  varchar(65536)
+                  autoIncrement:  false
+                  constraints:
+                    primaryKey:  false
+                    nullable:  false
+- changeSet:
+      id:  4
+      author:  Yannick Roffin
+      labels: add-slides-column
+      context: add-slides-column
+      comment: add-slides-column
+      changes:
+       - addColumn:
+            tableName:  project
+            columns:
+              - column:
+                  name:  slides
+                  type:  varchar(16384)
+                  autoIncrement:  false
+                  constraints:
+                    primaryKey:  false
+                    nullable:  false
+- changeSet:
+      id:  5
+      author:  Yannick Roffin
+      labels: add-meta-column
+      context: add-meta-column
+      comment: add-meta-column
+      changes:
+       - addColumn:
+            tableName:  project
+            columns:
+              - column:
+                  name:  meta
+                  type:  varchar(32768)
+                  autoIncrement:  false
+                  constraints:
+                    primaryKey:  false
+                    nullable:  false
+- changeSet:
+      id:  6
+      author:  Yannick Roffin
+      labels: add-head-column
+      context: add-head-column
+      comment: add-head-column
+      changes:
+       - addColumn:
+            tableName:  project
+            columns:
+              - column:
+                  name:  head
+                  type:  varchar(32768)
+                  autoIncrement:  false
+                  constraints:
+                    primaryKey:  false
+                    nullable:  false
