@@ -1,0 +1,80 @@
+<!doctype html>
+
+<!--
+
+             _     _
+            /_|   |_\
+           //||   ||\\
+          // ||   || \\
+         //  ||___||  \\
+        /     |   |     \    _
+       /    __|   |__    \  /_\
+      / .--~  |   |  ~--. \|   |
+     /.~ __\  |   |  /   ~.|   |
+    .~  `=='\ |   | /   _.-'.  |
+   /  /      \|   |/ .-~    _.-'
+  |           +---+  \  _.-~  |
+  `=----.____/  #  \____.----='
+   [::::::::|  (_)  |::::::::]
+  .=----~~~~~\     /~~~~~----=.
+  |          /`---'\          |
+   \  \     /       \     /  /
+    `.     /         \     .'
+      `.  /._________.\  .'
+   LS   `--._________.--'     Modified Corellian YT-1300 Transport (4)
+    
+-->
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title data-th-text="${head.title}"></title>
+
+    <meta name="description" data-th-content="${head?.description}" />
+    <meta name="author" data-th-content="${head?.author}" />
+
+    <!-- href style -->
+    <link data-th-each="link: ${head.stylesheets}" data-th-if="${link?.href}" rel="stylesheet"
+        data-th-href="${link?.href}" data-th-rel="${link?.rel}" />
+    <!-- inline style -->
+    <style data-th-each="link: ${head.stylesheets}" data-th-if="${link?.content}" data-th-utext="${link?.content}">
+    </style>
+</head>
+
+<body>
+    <div id="impress" data-th-data-transition-duration="${meta?.transitionDuration}" data-th-data-width="${meta?.width}"
+        data-th-data-height="${meta?.height}" data-th-data-max-scale="${meta?.maxScale}"
+        data-th-data-min-scale="${meta?.minScale}" data-th-data-perspective="${meta?.perspective}"
+        data-th-data-autoplay="${meta?.autoplay}">
+
+        <div th:each="slide: ${slides}" th:id="${slide?.id}" th:class="${slide?.get('class')}"
+            th:data-x="${slide?.get('data-x')}" th:data-y="${slide?.get('data-y')}" th:data-z="${slide?.get('data-z')}"
+            th:data-rotate="${slide?.get('data-rotate')}" th:data-rotate-x="${slide?.get('data-rotate-x')}"
+            th:data-rotate-y="${slide?.get('data-rotate-y')}" th:data-rotate-z="${slide?.get('data-rotate-z')}"
+            th:data-scale="${slide?.get('data-scale')}" th:data-autoplay="${slide?.get('data-autoplay')}"
+            th:utext="${slide?.get('content')}">
+        </div>
+
+    </div>
+
+    <div id="impress-toolbar"></div>
+
+    <div class="hint">
+        <p>Use a spacebar or arrow keys to navigate. <br />
+            Press 'P' to launch speaker console.</p>
+    </div>
+    <script>
+        if ("ontouchstart" in document.documentElement) {
+            document.querySelector(".hint").innerHTML = "<p>Swipe left or right to navigate</p>";
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/gh/impress/impress.js@2.0.0/js/impress.js"></script>
+    <script>impress().init();</script>
+
+</body>
+
+</html>
