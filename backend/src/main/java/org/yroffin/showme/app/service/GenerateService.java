@@ -1,6 +1,7 @@
 package org.yroffin.showme.app.service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,9 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.yroffin.showme.app.model.HeadRest;
 import org.yroffin.showme.app.model.MetaRest;
-import org.yroffin.showme.app.model.SlideRest;
 import org.yroffin.showme.app.repository.ProjectRepository;
+import org.yroffin.showme.app.repository.TextRepository;
 import org.yroffin.showme.app.repository.jpa.ProjectJpa;
+import org.yroffin.showme.app.repository.jpa.TextJpa;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +26,12 @@ public class GenerateService {
 
     @Autowired
     ProjectRepository projectRepository;
+
+    @Autowired
+    TextRepository textRepository;
+
+    @Autowired
+    MarkdownService markdownService;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -61,11 +69,31 @@ public class GenerateService {
             /**
              * slides
              */
-            List<SlideRest> slides = new ArrayList<SlideRest>();
+            List<LinkedHashMap> slides = new ArrayList<LinkedHashMap>();
             try {
                 slides = objectMapper.readValue(found.getSlides(), slides.getClass());
             } catch (JsonProcessingException e) {
                 LOG.error("While parsing {} => {}", found.getSlides(), e);
+            }
+
+            /**
+             * transform slides
+             */
+            for (LinkedHashMap slide : slides) {
+                String renderer = (String) slide.get("renderer");
+                String content = (String) slide.get("content");
+                if (renderer != null && renderer.compareTo("markdown") == 0) {
+                    String markdown = markdownService.render(content);
+                    slide.put("content", markdown);
+                }
+                if (renderer != null && renderer.compareTo("text") == 0) {
+                    Optional<TextJpa> entity = textRepository.findById((String) slide.get("content"));
+                    if (entity.isPresent()) {
+                        slide.put("content", entity.get().getContent());
+                    } else {
+                        slide.put("content", "No such entity: [" + (String) slide.get("content") + "]");
+                    }
+                }
             }
 
             model.addAttribute("slides", slides);

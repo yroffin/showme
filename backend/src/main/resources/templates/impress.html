@@ -36,12 +36,11 @@
     <meta name="description" data-th-content="${head?.description}" />
     <meta name="author" data-th-content="${head?.author}" />
 
-    <!-- href style -->
-    <link data-th-each="link: ${head.stylesheets}" data-th-if="${link?.href}" rel="stylesheet"
-        data-th-href="${link?.href}" data-th-rel="${link?.rel}" />
-    <!-- inline style -->
-    <style data-th-each="link: ${head.stylesheets}" data-th-if="${link?.content}" data-th-utext="${link?.content}">
-    </style>
+    <th:block data-th-each="link: ${head.stylesheets}">
+        <link data-th-if="${link?.href}" rel="stylesheet" data-th-href="${link?.href}" data-th-rel="${link?.rel}" />
+        <style data-th-if="${link?.content}" data-th-utext="${link?.content}">
+        </style>
+    </th:block>
 </head>
 
 <body>

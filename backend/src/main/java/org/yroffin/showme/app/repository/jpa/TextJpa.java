@@ -4,9 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 
-@Entity(name = "STYLE_SHEET")
+@Entity(name = "TEXT")
 @Data
-public class StyleSheetJpa {
+public class TextJpa {
     @Id
     private String name;
     private String content;

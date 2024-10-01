@@ -1,5 +1,7 @@
 package org.yroffin.showme.app.controller;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.yroffin.showme.app.model.StyleSheetRest;
+import org.yroffin.showme.app.model.TextRest;
 import org.yroffin.showme.app.service.StaticService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,12 +24,12 @@ public class StaticController {
     @Autowired
     StaticService staticService;
 
-    @GetMapping("/css/{name}")
+    @GetMapping("/text/{name}")
     public String upsert(@PathVariable(value = "name") String name,
             HttpServletResponse response) {
-        StyleSheetRest found = staticService.findStyleSheetById(name);
+        Optional<TextRest> found = staticService.findTextById(name);
 
-        if (found == null) {
+        if (!found.isPresent()) {
             response.setStatus(404);
             return "";
         }
@@ -40,15 +42,15 @@ public class StaticController {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
 
-        return found.getContent();
+        return found.get().getContent();
     }
 
-    @PostMapping("/css/{name}")
+    @PostMapping("/text/{name}")
     public String upsert(@PathVariable(value = "name") String name, @RequestBody String content,
             HttpServletResponse response) {
-        StyleSheetRest found = staticService.updateStyleSheetById(name, content);
+        Optional<TextRest> found = staticService.updateTextById(name, content);
 
-        if (found == null) {
+        if (!found.isPresent()) {
             response.setStatus(500);
             return "";
         }
@@ -61,6 +63,6 @@ public class StaticController {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
 
-        return found.getContent();
+        return found.get().getContent();
     }
 }

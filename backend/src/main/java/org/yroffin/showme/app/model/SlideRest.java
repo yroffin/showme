@@ -34,5 +34,6 @@ public class SlideRest {
     private String dataRotateY;
     @JsonProperty("data-rotate-z")
     private String dataRotateZ;
+    private String renderer;
     private String content;
 }

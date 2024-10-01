@@ -35,7 +35,9 @@ public class GenerateController {
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
 
-        LOG.info("Render template {} => {}", template, model);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Render template {} => {}", template, model);
+        }
         return template;
     }
 }

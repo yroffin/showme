@@ -19,12 +19,36 @@ databaseChangeLog:
 - changeSet:
       id:  2
       author:  Yannick Roffin
-      labels: add-css-table
-      context: add-css-table
-      comment: add-css-table
+      labels: add-style-sheet-table
+      context: add-style-sheet-table
+      comment: add-style-sheet-table
       changes:
        - createTable:
             tableName: style_sheet
+            columns:
+              - column:
+                  name:  name
+                  type:  varchar
+                  autoIncrement:  false
+                  constraints:
+                    primaryKey:  true
+                    nullable:  false
+              - column:
+                  name:  content
+                  type:  varchar(65536)
+                  autoIncrement:  false
+                  constraints:
+                    primaryKey:  false
+                    nullable:  false
+- changeSet:
+      id:  3
+      author:  Yannick Roffin
+      labels: add-text-table
+      context: add-text-table
+      comment: add-text-table
+      changes:
+       - createTable:
+            tableName: text
             columns:
               - column:
                   name:  name
@@ -52,7 +76,7 @@ databaseChangeLog:
             columns:
               - column:
                   name:  slides
-                  type:  varchar(16384)
+                  type:  varchar(65536)
                   autoIncrement:  false
                   constraints:
                     primaryKey:  false
@@ -69,7 +93,7 @@ databaseChangeLog:
             columns:
               - column:
                   name:  meta
-                  type:  varchar(32768)
+                  type:  varchar(65536)
                   autoIncrement:  false
                   constraints:
                     primaryKey:  false
