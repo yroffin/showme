@@ -81,6 +81,13 @@ databaseChangeLog:
                   constraints:
                     primaryKey:  false
                     nullable:  false
+              - column:
+                  name:  resources
+                  type:  varchar(65536)
+                  autoIncrement:  false
+                  constraints:
+                    primaryKey:  false
+                    nullable:  false
 - changeSet:
       id:  5
       author:  Yannick Roffin

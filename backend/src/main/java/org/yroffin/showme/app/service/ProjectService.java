@@ -12,6 +12,7 @@ import org.yroffin.showme.app.model.HeadRest;
 import org.yroffin.showme.app.model.MetaRest;
 import org.yroffin.showme.app.model.ProjectRest;
 import org.yroffin.showme.app.model.SlideRest;
+import org.yroffin.showme.app.model.TextRest;
 import org.yroffin.showme.app.repository.ProjectRepository;
 import org.yroffin.showme.app.repository.jpa.ProjectJpa;
 
@@ -61,20 +62,37 @@ public class ProjectService {
 
     private ProjectJpa mapRestToJpa(ProjectRest body, ProjectJpa found) {
         found.setName(body.getName());
+        /**
+         * fix meta field
+         */
         try {
             found.setMeta(objectMapper.writeValueAsString(body.getMeta()));
         } catch (JsonProcessingException e) {
-            LOG.error("While parsing {} => {}", body, e);
+            LOG.error("While parsing meta {} => {}", body, e);
         }
+        /**
+         * fix head field
+         */
         try {
             found.setHead(objectMapper.writeValueAsString(body.getHead()));
         } catch (JsonProcessingException e) {
-            LOG.error("While parsing {} => {}", body, e);
+            LOG.error("While parsing head {} => {}", body, e);
         }
+        /**
+         * fix slides field
+         */
         try {
             found.setSlides(objectMapper.writeValueAsString(body.getSlides()));
         } catch (JsonProcessingException e) {
-            LOG.error("While parsing {} => {}", body, e);
+            LOG.error("While parsing slides {} => {}", body, e);
+        }
+        /**
+         * fix resources field
+         */
+        try {
+            found.setResources(objectMapper.writeValueAsString(body.getResources()));
+        } catch (JsonProcessingException e) {
+            LOG.error("While parsing resources {} => {}", body, e);
         }
         return found;
     }
@@ -116,6 +134,16 @@ public class ProjectService {
             LOG.error("While parsing {} => {}", result.getSlides(), e);
         }
         result.setSlides(slides);
+        /**
+         * fix resources field
+         */
+        List<TextRest> resources = new ArrayList<TextRest>();
+        try {
+            resources = objectMapper.readValue(found.getResources(), resources.getClass());
+        } catch (JsonProcessingException e) {
+            LOG.error("While parsing {} => {}", result.getResources(), e);
+        }
+        result.setResources(resources);
         return result;
     }
 }

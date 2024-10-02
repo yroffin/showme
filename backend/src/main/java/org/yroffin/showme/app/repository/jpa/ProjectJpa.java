@@ -12,4 +12,5 @@ public class ProjectJpa {
     private String head;
     private String meta;
     private String slides;
+    private String resources;
 }

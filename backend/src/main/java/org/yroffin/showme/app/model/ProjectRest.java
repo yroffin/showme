@@ -20,4 +20,5 @@ public class ProjectRest {
     private MetaRest meta;
 
     private List<SlideRest> slides;
+    private List<TextRest> resources;
 }

@@ -77,15 +77,47 @@ public class GenerateService {
             }
 
             /**
+             * slides
+             */
+            List<LinkedHashMap> resources = new ArrayList<LinkedHashMap>();
+            try {
+                resources = objectMapper.readValue(found.getResources(), resources.getClass());
+            } catch (JsonProcessingException e) {
+                LOG.error("While parsing {} => {}", found.getResources(), e);
+            }
+
+            /**
              * transform slides
              */
             for (LinkedHashMap slide : slides) {
                 String renderer = (String) slide.get("renderer");
                 String content = (String) slide.get("content");
+                /**
+                 * markdown
+                 */
                 if (renderer != null && renderer.compareTo("markdown") == 0) {
                     String markdown = markdownService.render(content);
                     slide.put("content", markdown);
                 }
+                /**
+                 * resource
+                 */
+                if (renderer != null && renderer.compareTo("resource") == 0) {
+                    boolean resourceFound = false;
+                    String res = (String) slide.get("content");
+                    for (LinkedHashMap resource : resources) {
+                        if (res.compareTo((String) resource.get("name")) == 0) {
+                            slide.put("content", resource.get("content"));
+                            resourceFound = true;
+                        }
+                    }
+                    if (!resourceFound) {
+                        slide.put("content", "No such entity: [" + (String) slide.get("content") + "]");
+                    }
+                }
+                /**
+                 * text
+                 */
                 if (renderer != null && renderer.compareTo("text") == 0) {
                     Optional<TextJpa> entity = textRepository.findById((String) slide.get("content"));
                     if (entity.isPresent()) {
