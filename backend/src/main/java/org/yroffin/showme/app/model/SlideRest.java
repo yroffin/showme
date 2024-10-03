@@ -1,5 +1,7 @@
 package org.yroffin.showme.app.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -34,6 +36,6 @@ public class SlideRest {
     private String dataRotateY;
     @JsonProperty("data-rotate-z")
     private String dataRotateZ;
-    private String renderer;
-    private String content;
+    // content list
+    private List<ContentRest> contents;
 }

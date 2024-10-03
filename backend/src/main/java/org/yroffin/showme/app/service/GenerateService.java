@@ -35,7 +35,7 @@ public class GenerateService {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public String render(String name, Model model) {
         Optional<ProjectJpa> p = projectRepository.findById(name);
         if (p.isPresent()) {
@@ -90,44 +90,56 @@ public class GenerateService {
              * transform slides
              */
             for (LinkedHashMap slide : slides) {
-                String renderer = (String) slide.get("renderer");
-                String content = (String) slide.get("content");
-                /**
-                 * markdown
-                 */
-                if (renderer != null && renderer.compareTo("markdown") == 0) {
-                    String markdown = markdownService.render(content);
-                    slide.put("content", markdown);
-                }
-                /**
-                 * resource
-                 */
-                if (renderer != null && renderer.compareTo("resource") == 0) {
-                    boolean resourceFound = false;
-                    String res = (String) slide.get("content");
-                    for (LinkedHashMap resource : resources) {
-                        if (res.compareTo((String) resource.get("name")) == 0) {
-                            slide.put("content", resource.get("content"));
-                            resourceFound = true;
+                StringBuilder sb = new StringBuilder();
+                for (LinkedHashMap part : (List<LinkedHashMap>) slide.get("contents")) {
+                    String renderer = (String) part.get("renderer");
+                    String content = (String) part.get("content");
+                    if (content == null) {
+                        content = "";
+                    }
+
+                    /**
+                     * markdown
+                     */
+                    if (renderer != null && renderer.compareTo("markdown") == 0) {
+                        String markdown = markdownService.render(content);
+                        sb.append(markdown);
+                    } else {
+                        /**
+                         * resource
+                         */
+                        if (renderer != null && renderer.compareTo("resource") == 0) {
+                            boolean resourceFound = false;
+                            String res = (String) content;
+                            for (LinkedHashMap resource : resources) {
+                                if (res.compareTo((String) resource.get("name")) == 0) {
+                                    sb.append(resource.get("content"));
+                                    resourceFound = true;
+                                }
+                            }
+                            if (!resourceFound) {
+                                sb.append("No such entity: [" + (String) content + "]");
+                            }
+                        } else {
+                            /**
+                             * text
+                             */
+                            if (renderer != null && renderer.compareTo("text") == 0) {
+                                Optional<TextJpa> entity = textRepository.findById((String) content);
+                                if (entity.isPresent()) {
+                                    sb.append(entity.get().getContent());
+                                } else {
+                                    sb.append("No such entity: [" + (String) content + "]");
+                                }
+                            } else {
+                                // render as is
+                                sb.append(content);
+                            }
                         }
                     }
-                    if (!resourceFound) {
-                        slide.put("content", "No such entity: [" + (String) slide.get("content") + "]");
-                    }
                 }
-                /**
-                 * text
-                 */
-                if (renderer != null && renderer.compareTo("text") == 0) {
-                    Optional<TextJpa> entity = textRepository.findById((String) slide.get("content"));
-                    if (entity.isPresent()) {
-                        slide.put("content", entity.get().getContent());
-                    } else {
-                        slide.put("content", "No such entity: [" + (String) slide.get("content") + "]");
-                    }
-                }
+                slide.put("content", sb.toString());
             }
-
             model.addAttribute("slides", slides);
             return "impress";
         }
