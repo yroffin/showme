@@ -40,6 +40,10 @@ H2 console is [here](http://localhost:8080/h2-console)
 
 Run `./mvnw spring-boot:run` for a dev server. Navigate to `http://localhost:8080/`. The application will automatically reload if you change any of the source files.
 
+```shell
+./mvnw spring-boot:run -Dspring-boot.run.arguments="scan --folder $PWD/.tmp --wildcard \.*.yaml"
+```
+
 ## Build
 
 Run `./mvnw package` to build the project.

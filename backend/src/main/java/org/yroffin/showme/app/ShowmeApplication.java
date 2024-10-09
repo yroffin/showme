@@ -11,7 +11,9 @@ import io.swagger.v3.oas.annotations.info.Info;
 public class ShowmeApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ShowmeApplication.class, args);
+		SpringApplication application = new SpringApplication(ShowmeApplication.class);
+		application.setAddCommandLineProperties(false);
+		application.run(args);
 	}
 
 }
