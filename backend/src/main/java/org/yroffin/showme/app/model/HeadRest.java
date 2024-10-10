@@ -17,4 +17,5 @@ public class HeadRest {
     private String description;
     private String author;
     private List<StyleSheetRest> stylesheets;
+    private List<ScriptRest> scripts;
 }

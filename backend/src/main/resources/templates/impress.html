@@ -29,7 +29,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=1024" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title data-th-text="${head.title}"></title>
 
@@ -40,6 +40,12 @@
         <link data-th-if="${link?.href}" rel="stylesheet" data-th-href="${link?.href}" data-th-rel="${link?.rel}" />
         <style data-th-if="${link?.content}" data-th-utext="${link?.content}">
         </style>
+    </th:block>
+
+    <th:block data-th-each="script: ${head.scripts}">
+        <script data-th-if="${script?.src}" data-th-src="${script?.src}"></script>
+        <script data-th-if="${script?.content}" data-th-utext="${script?.content}">
+        </script>
     </th:block>
 </head>
 
@@ -73,7 +79,6 @@
 
     <script src="https://cdn.jsdelivr.net/gh/impress/impress.js@2.0.0/js/impress.js"></script>
     <script>impress().init();</script>
-
 </body>
 
 </html>
